@@ -26,33 +26,38 @@ static ID id_to_f;
 VALUE rb_mMath;
 VALUE rb_eMathDomainError;
 
+static inline int
+basic_to_f_p(VALUE klass)
+{
+    return rb_method_basic_definition_p(klass, id_to_f);
+}
+
 static inline double
 num2dbl_with_to_f(VALUE num)
 {
-    switch (TYPE(num)) {
-      case T_FLOAT:
-        return RFLOAT_VALUE(num);
-
-      case T_FIXNUM:
-        if (rb_method_basic_definition_p(rb_cFixnum, id_to_f)) {
-            return (double)FIX2LONG(num);
-        }
-        else {
-            return RFLOAT_VALUE(rb_to_float(num));
-        }
-
-      case T_BIGNUM:
-        if (rb_method_basic_definition_p(rb_cBignum, id_to_f)) {
-            return rb_big2dbl(num);
-        }
-        else {
-            return RFLOAT_VALUE(rb_to_float(num));
-        }
-
-      default:
-        return RFLOAT_VALUE(rb_to_float(num));
+    if (SPECIAL_CONST_P(num)) {
+	if (FIXNUM_P(num)) {
+	    if (basic_to_f_p(rb_cFixnum))
+		return (double)FIX2LONG(num);
+	}
+	else if (FLONUM_P(num)) {
+	    return RFLOAT_VALUE(num);
+	}
     }
+    else {
+	switch (BUILTIN_TYPE(num)) {
+	  case T_FLOAT:
+	    return RFLOAT_VALUE(num);
+	  case T_BIGNUM:
+	    if (basic_to_f_p(rb_cBignum))
+		return rb_big2dbl(num);
+	    break;
+	}
+    }
+    return RFLOAT_VALUE(rb_to_float(num));
 }
+
+#define Get_Double(x) num2dbl_with_to_f(x)
 
 #define domain_error(msg) \
     rb_raise(rb_eMathDomainError, "Numerical argument is out of domain - " #msg)
