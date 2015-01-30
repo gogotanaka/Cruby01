@@ -31,7 +31,7 @@ num2dbl_with_to_f(VALUE num)
 {
     switch (TYPE(num)) {
       case T_FLOAT:
-            return RFLOAT_VALUE(num);
+        return RFLOAT_VALUE(num);
 
       case T_FIXNUM:
         if (rb_method_basic_definition_p(rb_cFixnum, id_to_f)) {
