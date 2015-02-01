@@ -303,11 +303,7 @@ class TestMath < Test::Unit::TestCase
     check(Math.exp(1._to_f), Math.exp(0))
     check(Math.log(1._to_f), Math.log(0))
 
-    Fixnum.class_eval do
-      def to_f
-        _to_f
-      end
-    end
+    Fixnum.class_eval 'alias to_f _to_f'
   end
 
   def test_override_bignum_to_f
@@ -321,10 +317,6 @@ class TestMath < Test::Unit::TestCase
     check(Math.cos((1 << 63)._to_f),  Math.cos(1 << 62))
     check(Math.log((1 << 63)._to_f),  Math.log(1 << 62))
 
-    Bignum.class_eval do
-      def to_f
-        _to_f
-      end
-    end
+    Bignum.class_eval 'alias to_f _to_f'
   end
 end
