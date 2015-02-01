@@ -290,4 +290,41 @@ class TestMath < Test::Unit::TestCase
 
     assert_raise(Math::DomainError) { Math.lgamma(-Float::INFINITY) }
   end
+
+  def test_override_fixnum_to_f
+    Fixnum.class_eval do
+      alias _to_f to_f
+      def to_f
+       (self + 1)._to_f
+      end
+    end
+
+    check(Math.cos(1._to_f), Math.cos(0))
+    check(Math.exp(1._to_f), Math.exp(0))
+    check(Math.log(1._to_f), Math.log(0))
+
+    Fixnum.class_eval do
+      def to_f
+        _to_f
+      end
+    end
+  end
+
+  def test_override_bignum_to_f
+    Bignum.class_eval do
+      alias _to_f to_f
+      def to_f
+       (self << 1)._to_f
+      end
+    end
+
+    check(Math.cos((1 << 63)._to_f),  Math.cos(1 << 62))
+    check(Math.log((1 << 63)._to_f),  Math.log(1 << 62))
+
+    Bignum.class_eval do
+      def to_f
+        _to_f
+      end
+    end
+  end
 end
