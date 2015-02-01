@@ -143,7 +143,7 @@ class TestMath < Test::Unit::TestCase
     check(1, Math.log(10, 10))
     check(2, Math.log(100, 10))
     check(Math.log(2.0 ** 64), Math.log(1 << 64))
-    assert_equal(1.0/0, Math.log(1.0/0))
+    assert_nothing_raised { assert_infinity(Math.log(1.0/0)) }
     assert_nothing_raised { assert_infinity(-Math.log(+0.0)) }
     assert_nothing_raised { assert_infinity(-Math.log(-0.0)) }
     assert_raise(Math::DomainError) { Math.log(-1.0) }
@@ -157,7 +157,7 @@ class TestMath < Test::Unit::TestCase
     check(1, Math.log2(2))
     check(2, Math.log2(4))
     check(Math.log2(2.0 ** 64), Math.log2(1 << 64))
-    assert_equal(1.0/0, Math.log2(1.0/0))
+    assert_nothing_raised { assert_infinity(Math.log2(1.0/0)) }
     assert_nothing_raised { assert_infinity(-Math.log2(+0.0)) }
     assert_nothing_raised { assert_infinity(-Math.log2(-0.0)) }
     assert_raise(Math::DomainError) { Math.log2(-1.0) }
@@ -168,7 +168,7 @@ class TestMath < Test::Unit::TestCase
     check(1, Math.log10(10))
     check(2, Math.log10(100))
     check(Math.log10(2.0 ** 64), Math.log10(1 << 64))
-    assert_equal(1.0/0, Math.log10(1.0/0))
+    assert_nothing_raised { assert_infinity(Math.log10(1.0/0)) }
     assert_nothing_raised { assert_infinity(-Math.log10(+0.0)) }
     assert_nothing_raised { assert_infinity(-Math.log10(-0.0)) }
     assert_raise(Math::DomainError) { Math.log10(-1.0) }
@@ -178,7 +178,7 @@ class TestMath < Test::Unit::TestCase
     check(0, Math.sqrt(0))
     check(1, Math.sqrt(1))
     check(2, Math.sqrt(4))
-    assert_equal(1.0/0, Math.sqrt(1.0/0))
+    assert_nothing_raised { assert_infinity(Math.sqrt(1.0/0)) }
     assert_equal("0.0", Math.sqrt(-0.0).to_s) # insure it is +0.0, not -0.0
     assert_raise(Math::DomainError) { Math.sqrt(-1.0) }
   end
@@ -188,7 +188,7 @@ class TestMath < Test::Unit::TestCase
     check(-2, Math.cbrt(-8))
     check(3, Math.cbrt(27))
     check(-0.1, Math.cbrt(-0.001))
-    assert_equal(1.0/0, Math.sqrt(1.0/0))
+    assert_nothing_raised { assert_infinity(Math.cbrt(1.0/0)) }
   end
 
   def test_frexp
