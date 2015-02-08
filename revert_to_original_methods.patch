@@ -1,0 +1,42 @@
+From eed211a76cb4c7fcf23d46278388d0217756bd7f Mon Sep 17 00:00:00 2001
+From: gogotanaka <mail@tanakakazuki.com>
+Date: Sat, 31 Jan 2015 20:56:06 -0800
+Subject: [PATCH 1/1] Change the way to revert to original method
+To: https://bugs.ruby-lang.org/
+
+---
+ test/ruby/test_math.rb | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/test/ruby/test_math.rb b/test/ruby/test_math.rb
+index 5ec0ac0..f3640a0 100644
+--- a/test/ruby/test_math.rb
++++ b/test/ruby/test_math.rb
+@@ -303,11 +303,7 @@ class TestMath < Test::Unit::TestCase
+     check(Math.exp(1._to_f), Math.exp(0))
+     check(Math.log(1._to_f), Math.log(0))
+ 
+-    Fixnum.class_eval do
+-      def to_f
+-        _to_f
+-      end
+-    end
++    Fixnum.class_eval 'alias to_f _to_f'
+   end
+ 
+   def test_override_bignum_to_f
+@@ -321,10 +317,6 @@ class TestMath < Test::Unit::TestCase
+     check(Math.cos((1 << 63)._to_f),  Math.cos(1 << 62))
+     check(Math.log((1 << 63)._to_f),  Math.log(1 << 62))
+ 
+-    Bignum.class_eval do
+-      def to_f
+-        _to_f
+-      end
+-    end
++    Bignum.class_eval 'alias to_f _to_f'
+   end
+ end
+-- 
+gogotanaka
+
